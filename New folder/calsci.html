@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scientific Calculator</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background: #333;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .calculator {
+      background: #222;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .display {
+      width: 320px;
+      height: 60px;
+      margin-bottom: 20px;
+      text-align: right;
+      padding: 10px;
+      font-size: 28px;
+      background: #000;
+      color: #0f0;
+      border: 2px solid #0f0;
+      border-radius: 10px;
+      box-sizing: border-box;
+      letter-spacing: 2px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(5, 60px);
+      gap: 10px;
+    }
+
+    button {
+      padding: 20px;
+      font-size: 20px;
+      border: none;
+      background-color: navy;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #001f4d;
+    }
+
+    .equals {
+      grid-column: span 2;
+    }
+
+    .clear {
+      grid-column: span 2;
+    }
+
+    .scientific {
+      background-color: darkorange;
+    }
+
+    .scientific:hover {
+      background-color: #cc7a00;
+    }
+
+    .mode-toggle {
+      grid-column: span 5;
+      background-color: darkgreen;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<div class="calculator">
+  <input type="text" id="display" class="display" disabled>
+
+  <div class="buttons">
+    <button onclick="appendValue('7')">7</button>
+    <button onclick="appendValue('8')">8</button>
+    <button onclick="appendValue('9')">9</button>
+    <button onclick="appendValue('/')">÷</button>
+    <button onclick="appendValue('sqrt(')">√</button>
+
+    <button onclick="appendValue('4')">4</button>
+    <button onclick="appendValue('5')">5</button>
+    <button onclick="appendValue('6')">6</button>
+    <button onclick="appendValue('*')">×</button>
+    <button onclick="appendValue('^')">^</button>
+
+    <button onclick="appendValue('1')">1</button>
+    <button onclick="appendValue('2')">2</button>
+    <button onclick="appendValue('3')">3</button>
+    <button onclick="appendValue('-')">−</button>
+    <button onclick="appendValue('log(')">log</button>
+
+    <button onclick="appendValue('0')">0</button>
+    <button onclick="appendValue('.')">.</button>
+    <button class="equals" onclick="calculate()">=</button>
+    <button onclick="appendValue('+')">+</button>
+    <button onclick="appendValue('sin(')">sin</button>
+
+    <button class="clear" onclick="clearDisplay()">C</button>
+    <button class="mode-toggle" onclick="toggleMode()">Toggle Mode</button>
+    <button class="scientific" onclick="appendValue('cos(')">cos</button>
+    <button class="scientific" onclick="appendValue('tan(')">tan</button>
+    <button class="scientific" onclick="appendValue('pi')">π</button>
+  </div>
+</div>
+
+<script>
+  const display = document.getElementById('display');
+  let isScientific = false;
+
+  function appendValue(value) {
+    display.value += value;
+  }
+
+  function clearDisplay() {
+    display.value = '';
+  }
+
+  function calculate() {
+    try {
+      let expression = display.value;
+
+      // Replace scientific functions with JavaScript equivalents
+      expression = expression.replace(/sqrt\(/g, 'Math.sqrt(')
+                             .replace(/\^/g, '**')
+                             .replace(/log\(/g, 'Math.log10(')
+                             .replace(/sin\(/g, 'Math.sin(')
+                             .replace(/cos\(/g, 'Math.cos(')
+                             .replace(/tan\(/g, 'Math.tan(')
+                             .replace(/pi/g, 'Math.PI');
+
+      display.value = eval(expression);
+    } catch (e) {
+      display.value = 'Error';
+    }
+  }
+
+  function toggleMode() {
+    isScientific = !isScientific;
+    const scientificButtons = document.querySelectorAll('.scientific');
+    scientificButtons.forEach(button => {
+      button.style.display = isScientific ? 'block' : 'none';
+    });
+  }
+</script>
+
+</body>
+</html>
